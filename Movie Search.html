@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+      integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;900&display=swap');
+        body{
+            font-family: 'poppins', sans-serif;
+        }
+        p {
+        padding: 0;
+        margin: 0;
+        font-weight: 300;
+      }
+      h3 {
+        margin: 5px 0;
+        font-weight: 500;
+      }
+      h1{
+          font-weight: 900;
+        margin: 5px 0;
+        }
+      .container {
+        margin: auto;
+      }
+      .input_container {
+        width: 80%;
+        display: flex;
+        background-color: white;
+      }
+      .top {
+        margin-left: 10%;
+        margin-top: 7%;
+      }
+      .bottom {
+        display: flex;
+        width: 80%;
+        margin: auto;
+        background-color: black;
+        margin-top: 20px;
+        color: white;
+      }
+      .input {
+        width: 90%;
+        height: 50px;
+      }
+      .input:focus {
+        border: 1px solid black;
+      }
+
+      .search_btn {
+        background-color: white;
+        border: 1px solid black;
+        font-size: 2rem;
+        padding: 0 20px;
+        cursor: pointer;
+      }
+      .result {
+        height: 400px;
+        width: 300px;
+      }
+      #result{
+          height: 100%;
+      }
+      .right {
+        width: 60%;
+        margin-left: 25px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="top">
+        <div class="input_container">
+          <input type="text" class="input" id="title_to_search" />
+          <button class="search_btn" onclick="getMovie()">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+      <div class="bottom">
+        <div class="left">
+          <div class="result" id="movie"></div>
+        </div>
+
+        <div class="right">
+
+      </div>
+    </div>
+
+    <script>
+        async function getMovie(){
+    let prevPoster = document.getElementById('result')
+    let prevData = document.getElementById('movie_data')
+    let movie = document.getElementById('title_to_search').value
+    let response = await fetch(`http://www.omdbapi.com/?t=${movie}&y=2021&plot=full&&apikey=dafb350b`);
+    let data = await response.json();
+
+    
+    if(prevPoster){
+        document.getElementById('result').remove()
+    }
+
+    let left = document.getElementById('movie')
+    let img = document.createElement('img')
+    img.id = 'result'
+    img.src = data.Poster
+
+    left.append(img)
+
+
+    if(prevData){
+        document.getElementById('movie_data').remove()
+    }
+    let right = document.querySelector('.right')
+    let data_container = document.createElement('div')
+    data_container.id = 'movie_data'
+    let title = document.createElement('h1')
+    title.innerText = data.Title
+    
+    let genre_title = document.createElement('h3')
+    genre_title.innerText = 'Genre'
+    let genre = document.createElement('p')
+    genre.innerText = data.Genre
+
+    let discription_title = document.createElement('h3')
+    discription_title.innerText = 'Discription'
+    let discription = document.createElement('p')
+    discription.innerText = data.Plot
+
+    let director_title = document.createElement('h3')
+    director_title.innerText = 'Director'
+    let director = document.createElement('p')
+    director.innerText = data.Director
+
+    let year_title = document.createElement('h3')
+    year_title.innerText = 'Year'
+    let year = document.createElement('p')
+    year.innerText = data.Year
+
+    data_container.append(title,genre_title, genre, discription_title, discription, director_title, director, year_title, year)
+    right.append(data_container)
+}
+
+
+
+    </script>
+  </body>
+</html>
