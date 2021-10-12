@@ -76,6 +76,9 @@
         width: 60%;
         margin-left: 25px;
       }
+      #error{
+        align-items: center;
+      }
     </style>
   </head>
   <body>
@@ -88,7 +91,8 @@
           </button>
         </div>
       </div>
-      <div class="bottom">
+      <div class="bottom" id="bottom">
+        <div id="error"></div>
         <div class="left">
           <div class="result" id="movie"></div>
         </div>
@@ -99,17 +103,61 @@
     </div>
 
     <script>
-        async function getMovie(){
+    async function getMovie(){
+
+    let prevError = document.getElementById('error_data')
     let prevPoster = document.getElementById('result')
     let prevData = document.getElementById('movie_data')
     let movie = document.getElementById('title_to_search').value
-    let response = await fetch(`http://www.omdbapi.com/?t=${movie}&y=2021&plot=full&&apikey=dafb350b`);
+    let response = await fetch(`http://www.omdbapi.com/?t=${movie}&y=2021&plot=full&&apikey=dafb350b`)
     let data = await response.json();
 
-    
-    if(prevPoster){
+
+
+    if(data.Response === 'False' ){
+
+
+      if(prevPoster){
         document.getElementById('result').remove()
+      }
+      if(prevError){
+        document.getElementById('error_data').remove();
+      }
+
+    if(prevData){
+        document.getElementById('movie_data').remove()
     }
+
+    let divContainer = document.getElementById('error')
+    let div = document.createElement('div')
+    div.id = 'error_data'
+    document.getElementById('bottom').style.backgroundColor = 'White'
+    document.getElementById('bottom').style.color = 'black'
+    let img = document.createElement('img')
+    img.id = 'result'
+    img.src = 'https://c.tenor.com/oIvunNi9IFQAAAAC/find-finding.gif'
+    let error = document.createElement('h2')
+    error.innerText  = data.Error
+
+    div.append(img, error)
+    divContainer.append(div)
+
+    }else{
+
+      if(prevPoster){
+        document.getElementById('result').remove()
+      }
+      if(prevError){
+        document.getElementById('error_data').remove();
+      }
+
+    if(prevData){
+        document.getElementById('movie_data').remove()
+    }
+
+    document.getElementById('bottom').style.backgroundColor = 'black'
+    document.getElementById('bottom').style.color = 'white'
+
 
     let left = document.getElementById('movie')
     let img = document.createElement('img')
@@ -119,9 +167,7 @@
     left.append(img)
 
 
-    if(prevData){
-        document.getElementById('movie_data').remove()
-    }
+
     let right = document.querySelector('.right')
     let data_container = document.createElement('div')
     data_container.id = 'movie_data'
@@ -148,8 +194,16 @@
     let year = document.createElement('p')
     year.innerText = data.Year
 
-    data_container.append(title,genre_title, genre, discription_title, discription, director_title, director, year_title, year)
+    let rating_title = document.createElement('h3')
+    year_title.innerText = 'Rating'
+    let rating = document.createElement('p')
+    year.innerText = data.imdbRating
+
+    data_container.append(title,genre_title, genre, discription_title, discription, director_title, director, year_title, year, rating_title, rating)
     right.append(data_container)
+
+    }
+   
 }
 
 
