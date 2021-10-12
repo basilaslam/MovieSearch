@@ -71,6 +71,7 @@
       }
       #result{
           height: 100%;
+          max-width: 300px;
       }
       .right {
         width: 60%;
@@ -79,6 +80,55 @@
       #error{
         align-items: center;
       }
+
+      /* Recomended */
+
+      .tag {
+  float:right;
+  background: #eee;
+  border-radius: 3px 0 0 3px;
+  color: #999;
+  display: inline-block;
+  height: 26px;
+  line-height: 26px;
+  padding: 0 20px 0 23px;
+  position: relative;
+  margin-top:10px;
+  text-decoration: none;
+  -webkit-transition: color 0.2s;
+}
+
+.tag::before {
+  background: black;
+  border-radius: 10px;
+  box-shadow: inset 0 1px rgba(0, 0, 0, 0.25);
+  content: '';
+  height: 6px;
+  left: 10px;
+  position: absolute;
+  width: 6px;
+  top: 10px;
+}
+
+.tag::after {
+  background: black;
+  border-bottom: 13px solid transparent;
+  border-left: 10px solid #eee;
+  border-top: 13px solid transparent;
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.tag:hover {
+  background-color: crimson;
+  color: white;
+}
+
+.tag:hover::after {
+   border-left-color: crimson; 
+}
     </style>
   </head>
   <body>
@@ -92,17 +142,19 @@
         </div>
       </div>
       <div class="bottom" id="bottom">
+        
         <div id="error"></div>
         <div class="left">
           <div class="result" id="movie"></div>
         </div>
 
         <div class="right">
-
+<a href="#" class = 'tag' id="tag">Recomended</a>
       </div>
     </div>
 
     <script>
+       document.getElementById('tag').style.visibility = 'hidden'
     async function getMovie(){
 
     let prevError = document.getElementById('error_data')
@@ -112,10 +164,10 @@
     let response = await fetch(`http://www.omdbapi.com/?t=${movie}&y=2021&plot=full&&apikey=dafb350b`)
     let data = await response.json();
 
-
+console.log(data);
 
     if(data.Response === 'False' ){
-
+// Error
 
       if(prevPoster){
         document.getElementById('result').remove()
@@ -143,6 +195,7 @@
     divContainer.append(div)
 
     }else{
+      // Movie Detailes
 
       if(prevPoster){
         document.getElementById('result').remove()
@@ -155,6 +208,13 @@
         document.getElementById('movie_data').remove()
     }
 
+
+    if(Number(data.imdbRating) >= 8.5){
+      document.getElementById('tag').style.visibility = 'visible'
+    }else{
+      document.getElementById('tag').style.visibility = 'hidden'
+    }
+
     document.getElementById('bottom').style.backgroundColor = 'black'
     document.getElementById('bottom').style.color = 'white'
 
@@ -165,7 +225,6 @@
     img.src = data.Poster
 
     left.append(img)
-
 
 
     let right = document.querySelector('.right')
